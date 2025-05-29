@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyplanner/models/course_model.dart';
+import 'package:studyplanner/router/route_names.dart';
+import 'package:studyplanner/router/router.dart';
 import 'package:studyplanner/services/course_service.dart';
 import 'package:studyplanner/widgets/custom_button_widget.dart';
 import 'package:studyplanner/widgets/custom_input_widget.dart';
@@ -22,7 +25,7 @@ class AddNewCourse extends StatelessWidget {
 
   final TextEditingController _courseInstructorController =
       TextEditingController();
-
+  @override
   void dispose() {
     _courseNameController.dispose();
     _courseDescriptionController.dispose();
@@ -44,19 +47,22 @@ class AddNewCourse extends StatelessWidget {
       instructor: _courseInstructorController.text,
     );
 
-    await CourseService().addCourse(course);
+    try {
+      await CourseService().addCourse(course);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Course Added Successfully")));
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Course Added Successfully")));
+      _courseNameController.clear();
+      _courseDescriptionController.clear();
+      _courseDurationController.clear();
+      _courseInstructorController.clear();
+      _courseScheduleController.clear();
 
-    _courseNameController.clear();
-    _courseDescriptionController.clear();
-    _courseDurationController.clear();
-    _courseInstructorController.clear();
-    _courseScheduleController.clear();
-
-    Navigator.of(context).pop();
+      GoRouter.of(context).goNamed(RouteNames.mainPage);
+    } catch (err) {
+      print("Error ui : $err");
+    }
   }
 
   @override

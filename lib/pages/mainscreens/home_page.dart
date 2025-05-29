@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -81,7 +81,14 @@ class HomePage extends StatelessWidget {
                         ),
                       );
                     } else if (!snapshot.hasData || snapshot.data == null) {
-                      return const Center(child: Text("No Courses Added Yet!"));
+                      return Center(
+                        child: Column(
+                          children: [
+                            Image.asset("assets/course.png"),
+                            Text("No data"),
+                          ],
+                        ),
+                      );
                     } else {
                       final List<Course> courses = snapshot.data!;
                       return ListView.builder(
@@ -94,6 +101,12 @@ class HomePage extends StatelessWidget {
                             color: lightGreen,
 
                             child: ListTile(
+                              onTap: () {
+                                (context).pushNamed(
+                                  RouteNames.singleCoursePage,
+                                  extra: course,
+                                );
+                              },
                               title: Text(
                                 course.name,
                                 style: TextStyle(

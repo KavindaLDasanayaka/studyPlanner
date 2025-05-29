@@ -27,4 +27,13 @@ class CourseService {
           .toList(),
     );
   }
+
+  //delete course
+  Future<void> deleteCourse(String id) async {
+    try {
+      await _courseCollection.doc(id).delete();
+    } catch (err) {
+      print("Error Deleting Course :$err");
+    }
+  }
 }
